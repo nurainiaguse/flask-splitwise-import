@@ -17,13 +17,13 @@
                 <th>Saleh</th>
                 <th>Nuraini</th>
             </tr>
-             {% for transaction in transactions %}
+             {% for index, row in transactions.iterrows() %}
                 <tr>
-                    <td>{{ transaction[0] }}</td>
-                    <td>{{ transaction[3] }}</td>
-                    <td>{{ transaction[4] }}</td>
-                    <td><input type=checkbox name="{{ transaction[2]  }}" value=Saleh></td>
-                    <td><input type=checkbox name="{{ transaction[2]  }}" value=Nuraini></td>
+                    <td>{{ row['Transaction Date'] }}</td>
+                    <td>{{ row['Amount'] }}</td>
+                    <td>{{ row['Description']}}</td>
+                    <td><input type=checkbox name=Saleh value="{{ index  }}" ></td>
+                    <td><input type=checkbox name=Nuraini value="{{ index  }}" ></td>
                 </tr>
             {% endfor %}
         </table>

@@ -19,6 +19,9 @@ app.secret_key = "test_secret_key"
 ALLOWED_EXTENSIONS = set(['csv'])
 csv_input = 0
 file = 0
+df = 0
+saleh_value = []
+nuraini_value = []
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -49,36 +52,41 @@ def home():
 def transform():
     global file
     file = request.files['data_file']
-    
-    if not file:
-        return "No file"
     if file and allowed_file(file.filename):
-        stream = io.StringIO(file.stream.read().decode("UTF8"), newline=None)
-        global csv_input 
-        csv_input = csv.reader(stream)
+        df = pd.read_csv(file.stream)
+        print(list(df))
+        for index, row in df.iterrows():
+            print(row['Transaction Date'], row['Amount'])
+        return render_template("transform.html",transactions=df)
+    return redirect(url_for("/"))
+    # return "done"
+    # if not file:
+    #     return "No file"
+    # if file and allowed_file(file.filename):
+    #     stream = io.StringIO(file.stream.read().decode("UTF8"), newline=None)
+    #     global csv_input 
+    #     csv_input = csv.reader(stream)
 
-        next(csv_input)
-        #print("file contents: ", file_contents)
-        #print(type(file_contents))
-        # print(csv_input)
-        # for row in csv_input:
-        #     print(row[0])
-        return render_template("transform.html",transactions=csv_input)
-    return redirect(url_for("transform"))
+    #     next(csv_input)
+    #     #print("file contents: ", file_contents)
+    #     #print(type(file_contents))
+    #     # print(csv_input)
+    #     # for row in csv_input:
+    #     #     print(row[0])
+    #     return render_template("transform.html",transactions=csv_input)
+    # return redirect(url_for("transform"))
     # file = request.files['data_file']
     
 @app.route("/submission", methods=["POST"])
 def submission():
-    global csv_input
-    global file
-    file.seek(0)
+    global df
+    global nuraini_value
+    global saleh_value
     # csv_input.seek(0)
-    for line in csv_input:
-        print(line)
-    value = request.form.getlist('Saleh') 
-    print(value)
-    value2 = request.form.getlist('Nuraini')
-    print(value2) 
+    nuraini_value = request.form.getlist('Nuraini') 
+    print(nuraini_value)
+    saleh_value = request.form.getlist('Saleh')
+    print(saleh_value) 
     # result = request.form
     # for key, value in result.items():
     #     print(key)
