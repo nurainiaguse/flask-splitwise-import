@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Transactions{% endblock %}
+{% block content %}
+  <div class="jumbotron">
+    <h2>Transactions</h2>
+  </div>
+  <div class="transactions">
+    <div class="row">
+      <div class="col-md-12">
+        <form action="/submission" method=post>
+          <table>
+            <tr>
+                
+                <th>Date</th>
+                <th>Cost</th>
+                <th>Description</th>
+                <th>Saleh</th>
+                <th>Nuraini</th>
+            </tr>
+             {% for transaction in transactions %}
+                <tr>
+                    <td>{{ transaction[0] }}</td>
+                    <td>{{ transaction[3] }}</td>
+                    <td>{{ transaction[4] }}</td>
+                    <td><input type=checkbox name="{{ transaction[2]  }}" value=Saleh></td>
+                    <td><input type=checkbox name="{{ transaction[2]  }}" value=Nuraini></td>
+                </tr>
+            {% endfor %}
+        </table>
+        <input type="submit" value="Submit">
+    </form>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+
