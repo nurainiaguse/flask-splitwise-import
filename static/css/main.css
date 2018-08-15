@@ -1,0 +1,81 @@
+body {
+    background-color: salmon;
+    padding:0;
+    margin:0;
+}
+
+h1{
+  font-family: 'Molengo', Helvetica, Arial, sans-serif;
+  font-size: 80px;
+  color:black;
+  text-align:left;
+  margin-top: 40px;
+  margin-left: 80px;
+}
+
+h2{
+  font-family: 'Lekton', Helvetica, Arial, sans-serif;
+  font-size: 50px;
+  color:white;
+  text-align:center;
+  margin-top: 150px;
+}
+
+
+input[type=submit] {
+    padding:5px 15px; 
+    background:#ccc; 
+    border:0 none;
+    cursor:pointer;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+input[type=submit]:hover{
+  background: #666; color: #FFF;
+}
+
+/*.center{
+	margin-top: 100px;
+	margin-left: 30%
+	margin-right:30%;
+	width: 50%;
+}*/
+
+.inputfile {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
+.inputfile + label {
+    font-size: 1.25em;
+    /*font-weight: 700;*/
+    color: white;
+    background-color: black;
+    display: inline-block;
+    border-radius: 5px;
+    padding:5px 15px; 
+}
+.inputfile:focus + label,
+.inputfile + label:hover {
+    background-color: red;
+}
+
+.inputfile:focus + label {
+	outline: 1px dotted #000;
+	outline: -webkit-focus-ring-color auto 5px;
+}
+
+#top{
+	height:30%;
+}
+#bottom{
+	background-color:white;
+	height:70%;
+}

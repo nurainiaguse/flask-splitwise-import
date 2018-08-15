@@ -1,16 +1,27 @@
 {% extends "base.html" %}
 {% block title %}Transactions{% endblock %}
 {% block content %}
-  <div class="jumbotron">
+<head>
+  <link rel="stylesheet" href="{{ url_for('static',filename='css/styles.css') }}">
+  <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Goudy+Bookletter+1911" rel="stylesheet">
+</head>
+<body>
     <h2>Transactions</h2>
-  </div>
   <div class="transactions">
     <div class="row">
       <div class="col-md-12">
         <form action="/submission" method=post>
-          <table>
+          <table class='center'>
+            <col width="30px" />
+            <col width="30px" />
+            <col width="80px" />
+            <col width="30px" />
+            <col width="30px" />
+            <col width="40px" />
+            <col width="40px" />
+            <col width="60px" />
             <tr>
-                
                 <th>Date</th>
                 <th>Cost</th>
                 <th>Description</th>
@@ -25,11 +36,12 @@
                     <td>{{ row['Transaction Date'] }}</td>
                     <td>{{ row['Amount'] }}</td>
                     <td>{{ row['Description']}}</td>
-                    <td><input type=radio name="{{ index  }}" value=Saleh ></td>
-                    <td><input type=radio name="{{ index  }}" value=Nuraini ></td>
-                    <td><input type=radio name="{{ index  }}" value=Half-Split ></td>
-                    <td><input type=radio name="{{ index  }}" value=Payment ></td>
-                    <td><input type=radio value=Share ><input type="text" name="{{ index  }}" />​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​</td>
+                    <td><input type=radio name="{{ index  }}" value=Saleh data-textid="share-txt{{index}}"></td>
+                    <td><input type=radio name="{{ index  }}" value=Nuraini data-textid="share-txt{{index}}"></td>
+                    <td><input type=radio name="{{ index  }}" value=Half-Split data-textid="share-txt{{index}}"></td>
+                    <td><input type=radio name="{{ index  }}" value=Payment data-textid="share-txt{{index}}"></td>
+                    <td><input type=radio id="share-btn{{index}}" name="{{ index  }}" value=Share data-textid="share-txt{{index}}">
+                      <input type="number" id="share-txt{{index}}" style="display:none" name="txt{{ index  }}" />​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​</td>
                 </tr>
             {% endfor %}
         </table>
@@ -38,6 +50,25 @@
       </div>
     </div>
   </div>
+</body>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+  <script>
+    $(function(){
+      $("input[type='radio']").change(function(){
+        var textId = $(this).attr('data-textid');
+        if($(this).val()=="Share"){
+          $("#"+textId).show();
+        }
+        else{
+         $("#"+textId).hide(); 
+        }
+      });
+    });
+
+
+
+  </script>
 
 {% endblock %}
 

@@ -1,0 +1,22 @@
+
+
+<html>
+    <head>
+        <link rel="stylesheet" href="{{ url_for('static',filename='css/main.css') }}">
+        <link href="https://fonts.googleapis.com/css?family=Molengo" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Lekton" rel="stylesheet">
+    </head>
+    <body>
+        <h1>divvy.csv</h1>
+        <h2>Make joint accounts a painless experience</h2>
+       <div style="width:400px; margin-right:auto; margin-left:auto; margin-top: 100px;" id="top">
+            <form action="/transform" method="post" enctype="multipart/form-data" >
+                <input type="file" class="inputfile" name="data_file" id="file"/>
+                <label for="file">Choose a file</label>
+                <input type="submit" />
+            </form>
+        </div>
+        <div class="mid" id="bottom">
+        </div>
+    </body>
+</html>
