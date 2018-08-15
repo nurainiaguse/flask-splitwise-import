@@ -51,6 +51,7 @@ def home():
 @app.route("/transform", methods=["POST"])
 def transform():
     global file
+    global df
     file = request.files['data_file']
     if file and allowed_file(file.filename):
         df = pd.read_csv(file.stream)
@@ -82,15 +83,60 @@ def submission():
     global df
     global nuraini_value
     global saleh_value
-    # csv_input.seek(0)
+    # TODO: add checks beforehand whether the user has clicked on all checkboxes
+
     nuraini_value = request.form.getlist('Nuraini') 
     print(nuraini_value)
+    
     saleh_value = request.form.getlist('Saleh')
     print(saleh_value) 
-    # result = request.form
-    # for key, value in result.items():
-    #     print(key)
-    #     print(value)
+
+
+    # # set up each user
+    saleh = ExpenseUser()
+    saleh.setId(2242086)
+
+    paypal = ExpenseUser()
+    paypal.setId(13080887)
+
+    nuraini = ExpenseUser()
+    nuraini.setId(2705458)
+
+    sObj = Splitwise(Config.consumer_key,Config.consumer_secret)
+    sObj.setAccessToken(session['access_token'])
+
+    for value in nuraini_value:
+        print(df.iloc[int(float(value))]['Amount'])
+        users = []
+        users.append(paypal)
+        users.append(nuraini)
+        expense = Expense()
+        expense.setUsers(users)
+        expense.setGroupId(6456733)
+        expense.setCost(str(abs(float(df.iloc[int(float(value))]['Amount']))))
+        expense.setDescription(df.iloc[int(float(value))]['Description'])
+        # print (datetime.datetime.strptime(line['Date'], '%m/%d/%y').strftime('%d/%m/%Y'))
+        expense.setDate(datetime.datetime.strptime(df.iloc[int(float(value))]['Transaction Date'], '%m/%d/%y').strftime('%d/%m/%Y'))
+        nuraini.setOwedShare(str(abs(float(df.iloc[int(float(value))]['Amount']))))
+        paypal.setPaidShare(str(abs(float(df.iloc[int(float(value))]['Amount']))))
+        # expense = sObj.createExpense(expense)
+
+    for value in saleh_value:
+        print(df.iloc[int(float(value))]['Amount'])
+        users = []
+        users.append(paypal)
+        users.append(saleh)
+        expense = Expense()
+        expense.setUsers(users)
+        expense.setGroupId(6456733)
+        expense.setCost(str(abs(float(df.iloc[int(float(value))]['Amount']))))
+        expense.setDescription(df.iloc[int(float(value))]['Description'])
+        # print (datetime.datetime.strptime(line['Date'], '%m/%d/%y').strftime('%d/%m/%Y'))
+        expense.setDate(datetime.datetime.strptime(df.iloc[int(float(value))]['Transaction Date'], '%m/%d/%y').strftime('%d/%m/%Y'))
+        saleh.setOwedShare(str(abs(float(df.iloc[int(float(value))]['Amount']))))
+        paypal.setPaidShare(str(abs(float(df.iloc[int(float(value))]['Amount']))))
+        # expense = sObj.createExpense(expense)
+
     return redirect(url_for("friends"))
 
 
@@ -135,68 +181,6 @@ def friends():
     #     print g.getName(), g.getId()
 
     friends = sObj.getFriends()
-
-    ###################### CODE TO COMPARE TRANSACTIONS #######################
-    # expenses = sObj.getExpenses(limit=1000, group_id = 6456733, dated_after='01/03/2018', dated_before='31/03/2018')
-    # print (len(expenses))
-    # countSplit = {}
-    # paymentSum = 0
-    # expenseCostSplit = []
-    # for expense in expenses:
-    #     # print(type(expense.getCost()))
-    #     if expense.getDescription() != 'Payment' and expense.getDeletedAt() == None:
-    #         expenseCostSplit.append(expense.getCost())
-    #         date = datetime.datetime.strptime(expense.getDate()[:-10], '%Y-%m-%d').strftime('%m/%d/%y')
-    #         if date in countSplit:
-    #             countSplit[date] += 1
-    #         else:
-    #             countSplit[date] = 1
-    #     else:
-    #         paymentSum +=1
-    # print(sum(countSplit.values()), paymentSum, paymentSum+sum(countSplit.values()))
-    # # for key, value in sorted(countSplit.items(), key = lambda x: datetime.datetime.strptime(x[0], '%m/%d/%y')):
-    # #     print (key, value)
-
-    # countPayPal = {}
-    # expenseCostPayPal = []
-    # with open(sys.argv[1], 'r') as paypal_csv:
-    #     paypal_output = csv.DictReader(paypal_csv)
-
-    #     for line in paypal_output:
-    #         if line['Description'] != 'PAYMENT - THANK YOU':
-    #             expenseCostPayPal.append(str(abs(float(line['Amount']))))
-    #             date = datetime.datetime.strptime(line['Transaction Date'], '%m/%d/%y').strftime('%m/%d/%y')
-    #             if date in countPayPal:
-    #                 countPayPal[date] += 1
-    #             else:
-    #                 countPayPal[date] = 1
-    # # for key, value in sorted(countPayPal.items(), key = lambda x: datetime.datetime.strptime(x[0], '%m/%d/%y')):
-    # #     if key in countSplit:
-    # #         if countSplit[key] != value:
-    # #             print ('PayPal: %s: %d' % (key, value))
-    # #             print ('Splitwise %s: %d' % (key, countSplit[key]))
-    # #     else:
-    # #         print ('%s not found in splitwise' % key)
-    #     # print (key, value)
-
-    # # value = { k : countPayPal[k] for k in set(countPayPal) - set(countSplit) }
-
-    # for key, value in sorted(countPayPal.items(), key = lambda x: datetime.datetime.strptime(x[0], '%m/%d/%y')):
-    #     if key in countSplit:
-    #         if value != countSplit[key]:
-    #             print ('%s: %d %d' % (key, value, countSplit[key]))
-    #     else:
-    #         print ('%s: %d' % (key, value))
-
-    # # expenseCostSplit.sort()
-    # # expenseCostPayPal.sort()
-
-    # # print(len(expenseCostPayPal))
-
-    # # for i in range(len(expenseCostSplit)):
-    # #     if expenseCostSplit[i] != expenseCostPayPal[i]:
-    # #         print ('PayPal: %s' % (expenseCostPayPal[i]))
-    # #         print ('Splitwise %s' % (expenseCostSplit[i])) 
 
     ################## CODE TO IMPORT TRANSACTIONS #######################
     # with open(sys.argv[1], 'r') as paypal_csv:
