@@ -84,15 +84,14 @@ def submission():
     global nuraini_value
     global saleh_value
     # TODO: add checks beforehand whether the user has clicked on all checkboxes
-
-    nuraini_value = request.form.getlist('Nuraini') 
-    print(nuraini_value)
+    print(request.form)
+    # nuraini_value = request.form.getlist('Nuraini') 
+    # print(nuraini_value)
     
-    saleh_value = request.form.getlist('Saleh')
-    print(saleh_value) 
+    # saleh_value = request.form.getlist('Saleh')
+    # print(saleh_value) 
 
-
-    # # set up each user
+    # set up each user
     saleh = ExpenseUser()
     saleh.setId(2242086)
 
@@ -104,37 +103,86 @@ def submission():
 
     sObj = Splitwise(Config.consumer_key,Config.consumer_secret)
     sObj.setAccessToken(session['access_token'])
+    users = []
+    users.append(saleh)
+    users.append(paypal)
+    users.append(nuraini)
 
-    for value in nuraini_value:
-        print(df.iloc[int(float(value))]['Amount'])
-        users = []
-        users.append(paypal)
-        users.append(nuraini)
+    for key in request.form:
+        value = request.form[key]
+        print(key, value)
+        saleh.setPaidShare('0.00')
+        nuraini.setPaidShare('0.00')
+        paypal.setPaidShare('0.00')
+            
+        saleh.setOwedShare('0.00')
+        nuraini.setOwedShare('0.00')
+        paypal.setOwedShare('0.00')
+
         expense = Expense()
         expense.setUsers(users)
         expense.setGroupId(6456733)
-        expense.setCost(str(abs(float(df.iloc[int(float(value))]['Amount']))))
-        expense.setDescription(df.iloc[int(float(value))]['Description'])
+        expense.setCost(str(abs(float(df.iloc[int(float(key))]['Amount']))))
+        expense.setDescription(df.iloc[int(float(key))]['Description'])
         # print (datetime.datetime.strptime(line['Date'], '%m/%d/%y').strftime('%d/%m/%Y'))
-        expense.setDate(datetime.datetime.strptime(df.iloc[int(float(value))]['Transaction Date'], '%m/%d/%y').strftime('%d/%m/%Y'))
-        nuraini.setOwedShare(str(abs(float(df.iloc[int(float(value))]['Amount']))))
-        paypal.setPaidShare(str(abs(float(df.iloc[int(float(value))]['Amount']))))
-        # expense = sObj.createExpense(expense)
+        expense.setDate(datetime.datetime.strptime(df.iloc[int(float(key))]['Transaction Date'], '%m/%d/%y').strftime('%d/%m/%Y'))
 
-    for value in saleh_value:
-        print(df.iloc[int(float(value))]['Amount'])
-        users = []
-        users.append(paypal)
-        users.append(saleh)
-        expense = Expense()
-        expense.setUsers(users)
-        expense.setGroupId(6456733)
-        expense.setCost(str(abs(float(df.iloc[int(float(value))]['Amount']))))
-        expense.setDescription(df.iloc[int(float(value))]['Description'])
-        # print (datetime.datetime.strptime(line['Date'], '%m/%d/%y').strftime('%d/%m/%Y'))
-        expense.setDate(datetime.datetime.strptime(df.iloc[int(float(value))]['Transaction Date'], '%m/%d/%y').strftime('%d/%m/%Y'))
-        saleh.setOwedShare(str(abs(float(df.iloc[int(float(value))]['Amount']))))
-        paypal.setPaidShare(str(abs(float(df.iloc[int(float(value))]['Amount']))))
+        if float(df.iloc[int(float(key))]['Amount']) > 0 and value != 'Payment':
+            #print ("Refund", line['Payer'], line['Date'], line['Description'], line['Amount'])
+            if value == 'Saleh':
+                paypal.setOwedShare(str(abs(float(df.iloc[int(float(key))]['Amount']))))
+                saleh.setPaidShare(str(abs(float(df.iloc[int(float(key))]['Amount']))))
+            elif value == 'Nuraini':
+                paypal.setOwedShare(str(abs(float(df.iloc[int(float(key))]['Amount']))))
+                nuraini.setPaidShare(str(abs(float(df.iloc[int(float(key))]['Amount']))))   
+            # expense = sObj.createExpense(expense)
+            # print (expense.getId())
+
+        elif value != 'Payment':
+                #print ("Charge", line['Payer'], line['Date'], line['Description'], line['Amount'])
+            if value == 'Saleh':
+                saleh.setOwedShare(str(abs(float(df.iloc[int(float(key))]['Amount']))))
+                paypal.setPaidShare(str(abs(float(df.iloc[int(float(key))]['Amount']))))
+            elif value == 'Nuraini':
+                nuraini.setOwedShare(str(abs(float(df.iloc[int(float(key))]['Amount']))))
+                paypal.setPaidShare(str(abs(float(df.iloc[int(float(key))]['Amount']))))   
+            # expense = sObj.createExpense(expense)
+            # print (expense.getId())
+
+
+
+    
+
+    # for value in nuraini_value:
+    #     print(df.iloc[int(float(value))]['Amount'])
+    #     users = []
+    #     users.append(paypal)
+    #     users.append(nuraini)
+    #     expense = Expense()
+    #     expense.setUsers(users)
+    #     expense.setGroupId(6456733)
+    #     expense.setCost(str(abs(float(df.iloc[int(float(value))]['Amount']))))
+    #     expense.setDescription(df.iloc[int(float(value))]['Description'])
+    #     # print (datetime.datetime.strptime(line['Date'], '%m/%d/%y').strftime('%d/%m/%Y'))
+    #     expense.setDate(datetime.datetime.strptime(df.iloc[int(float(value))]['Transaction Date'], '%m/%d/%y').strftime('%d/%m/%Y'))
+    #     nuraini.setOwedShare(str(abs(float(df.iloc[int(float(value))]['Amount']))))
+    #     paypal.setPaidShare(str(abs(float(df.iloc[int(float(value))]['Amount']))))
+    #     # expense = sObj.createExpense(expense)
+
+    # for value in saleh_value:
+    #     print(df.iloc[int(float(value))]['Amount'])
+    #     users = []
+    #     users.append(paypal)
+    #     users.append(saleh)
+    #     expense = Expense()
+    #     expense.setUsers(users)
+    #     expense.setGroupId(6456733)
+    #     expense.setCost(str(abs(float(df.iloc[int(float(value))]['Amount']))))
+    #     expense.setDescription(df.iloc[int(float(value))]['Description'])
+    #     # print (datetime.datetime.strptime(line['Date'], '%m/%d/%y').strftime('%d/%m/%Y'))
+    #     expense.setDate(datetime.datetime.strptime(df.iloc[int(float(value))]['Transaction Date'], '%m/%d/%y').strftime('%d/%m/%Y'))
+    #     saleh.setOwedShare(str(abs(float(df.iloc[int(float(value))]['Amount']))))
+    #     paypal.setPaidShare(str(abs(float(df.iloc[int(float(value))]['Amount']))))
         # expense = sObj.createExpense(expense)
 
     return redirect(url_for("friends"))

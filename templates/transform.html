@@ -16,14 +16,20 @@
                 <th>Description</th>
                 <th>Saleh</th>
                 <th>Nuraini</th>
+                <th>Half-Split</th>
+                <th>Payment</th>
+                <th>Share</th>
             </tr>
              {% for index, row in transactions.iterrows() %}
                 <tr>
                     <td>{{ row['Transaction Date'] }}</td>
                     <td>{{ row['Amount'] }}</td>
                     <td>{{ row['Description']}}</td>
-                    <td><input type=checkbox name=Saleh value="{{ index  }}" ></td>
-                    <td><input type=checkbox name=Nuraini value="{{ index  }}" ></td>
+                    <td><input type=radio name="{{ index  }}" value=Saleh ></td>
+                    <td><input type=radio name="{{ index  }}" value=Nuraini ></td>
+                    <td><input type=radio name="{{ index  }}" value=Half-Split ></td>
+                    <td><input type=radio name="{{ index  }}" value=Payment ></td>
+                    <td><input type=radio value=Share ><input type="text" name="{{ index  }}" />​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​</td>
                 </tr>
             {% endfor %}
         </table>
