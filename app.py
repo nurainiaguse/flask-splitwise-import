@@ -49,6 +49,8 @@ def transform():
     global file
     global df
     file = request.files['data_file']
+    if not file:
+        return render_template("transform.html",transactions=df)
     if file and allowed_file(file.filename):
         df = pd.read_csv(file.stream)
         print(list(df))

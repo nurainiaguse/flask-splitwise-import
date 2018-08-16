@@ -22,19 +22,23 @@ h2{
 }
 
 
+
+
 input[type=submit] {
     padding:5px 15px; 
-    background:#ccc; 
-    border:0 none;
+    background:salmon; 
+    border:2px solid white;
     cursor:pointer;
     -webkit-border-radius: 5px;
     border-radius: 5px;
     margin-left: auto;
     margin-right: auto;
+    color:white;
 }
 
 input[type=submit]:hover{
-  background: #666; color: #FFF;
+  background: salmon; color: black;
+  border: 2px solid black;
 }
 
 /*.center{
@@ -57,14 +61,14 @@ input[type=submit]:hover{
     font-size: 1.25em;
     /*font-weight: 700;*/
     color: white;
-    background-color: black;
+    background-color: darkcyan;
     display: inline-block;
     border-radius: 5px;
     padding:5px 15px; 
 }
 .inputfile:focus + label,
 .inputfile + label:hover {
-    background-color: red;
+    background-color: black;
 }
 
 .inputfile:focus + label {
