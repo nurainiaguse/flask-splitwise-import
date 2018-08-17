@@ -32,18 +32,55 @@ label{
   z-index:10;
 }
 
+.transactions{
+  margin-top:50px;
+}
+
 .container{
   width:90%;
   margin-left:130px;
   overflow: hidden;
+  
+}
+header .container{
+  margin-top:20px;
 }
 
 .button{
   margin-top:10px;
 }
 
+.col{
+  position:relative;
+  /*border:2px solid green;*/
+}
+
+.center{
+  font-family:"Karla", Helvetica, Arial;
+  font-size:1.2em;
+  letter-spacing: 1px;
+}
+
 .share-number{
   display:none;
+  font-size:1.5em;
+  width:100px;
+  font-family:"Karla",Helvetica, Arial;
+  letter-spacing: :1px;
+}
+
+.share-number ~ .focus-border{
+  position:absolute;
+  left:0;
+  bottom:0;
+  background-color:red;
+  height:100px;
+  width:10px;
+}
+
+.share-number:focus ~ .focus-border{
+  width:100%;
+  transition:0.4s;
 }
 
 .check{
@@ -101,13 +138,21 @@ label:hover ~ .check{
     border-radius: 5px;
     margin-left: auto;
     margin-right: auto;
+    margin-top:20px;
     color:darkcyan;
     font-size:2em;
     font-family:'Lekton';
+    transition: border .25s linear;
+    -webkit-transition: border .25s linear;
+    transition: font .25s linear;
+    -webkit-transition: font .25s linear;
+    transition: background .25s linear;
+    -webkit-transition: background .25s linear;
 }
 
 #submit-btn:hover{
-  background: salmon; color: black;
+  /*background: salmon; */
+  color: black;
   border: 2px solid black;
 }
 
@@ -154,7 +199,7 @@ table.center td { overflow: hidden; }
 td, th {  
     border: none; /* No more visible border */
     height: 50px; 
-    border-bottom: 4px solid salmon;
+    /*border-bottom: 4px solid salmon;*/
     /*transition: all 0.3s; */
 }
 
@@ -163,6 +208,7 @@ th {
     font-weight: bold;
     font-size: 20px;
     text-align: center;
+    font-family:"Karla",Arial;
 }
 
 td {  

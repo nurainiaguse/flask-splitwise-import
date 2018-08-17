@@ -185,7 +185,9 @@ def authorize():
 
     return redirect(url_for("home"))
 
-
+@app.route("/success")
+def success():
+    return render_template("success.html")
 
 @app.route("/friends")
 def friends():

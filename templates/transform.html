@@ -5,6 +5,7 @@
   <link rel="stylesheet" href="{{ url_for('static',filename='css/styles.css') }}">
   <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Goudy+Bookletter+1911" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Karla" rel="stylesheet">
 </head>
 <body>
   <header>
@@ -14,6 +15,7 @@
   </header>
   
   <section id="sidebar">
+    <a href="{{ url_for('home') }}">divvy.csv</a>
     <a href="#about">About</a>
   <a href="#services">Services</a>
   <a href="#clients">Clients</a>
@@ -65,10 +67,16 @@
                       <label for="payment-{{index}}"></label>
                       <div class="check"></div>
                     </td>
-                    <td><input type=radio id="share-btn{{index}}" name="{{ index  }}" value=Share>
-                      <label for="share-btn{{index}}"></label>
-                      <div class="check"></div>
-                      <input class="share-number" type="number" id="share-txt{{index}}" name="txt{{ index  }}" />​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​</td>
+                    <td>
+                      
+                        <input type=radio id="share-btn{{index}}" name="{{ index  }}" value=Share>
+                        <label for="share-btn{{index}}" id="check-label{{index}}"></label>
+                        <div class="check" id="check{{index}}"></div>
+                        <input class="share-number" type="number" id="share-txt{{index}}" name="txt{{ index  }}" />​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​</td>
+                        <div class="col">
+                        <span class="focus-border"></span>
+                      </div>
+                      
                 </tr>
             {% endfor %}
         </table>
@@ -87,15 +95,18 @@
   <script>
     $(function(){
       $("input[type='radio']").change(function(){
+        // alert($(this).attr('id'));
         var index = $(this).attr('name');
         if($(this).val()=="Share"){
-          $("#share-txt"+index).show();
-          $(this).hide();
+          $("#share-txt"+index).fadeIn(50);
+          $("#check"+index).hide();
+          $("#check-label"+index).hide();
         }
         else{
-         $("#"+textId).hide(); 
+         $("#share-txt"+index).fadeOut(25); 
          
-          $("#share-btn"+index).show();
+          $("#check"+index).show();
+          $("#check-label"+index).show();
         }
       });
     });
