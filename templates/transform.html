@@ -7,8 +7,21 @@
 <link href="https://fonts.googleapis.com/css?family=Goudy+Bookletter+1911" rel="stylesheet">
 </head>
 <body>
-    <h2>Transactions</h2>
-  <div class="transactions">
+  <header>
+    <div class="container">
+      <h2>Transactions</h2>
+    </div>
+  </header>
+  
+  <section id="sidebar">
+    <a href="#about">About</a>
+  <a href="#services">Services</a>
+  <a href="#clients">Clients</a>
+  <a href="#contact">Contact</a>
+  </section>
+
+
+  <div class="transactions container">
     <div class="row">
       <div class="col-md-12">
         <form action="/submission" method=post>
@@ -36,32 +49,53 @@
                     <td>{{ row['Transaction Date'] }}</td>
                     <td>{{ row['Amount'] }}</td>
                     <td>{{ row['Description']}}</td>
-                    <td><input type=radio name="{{ index  }}" value=Saleh data-textid="share-txt{{index}}"></td>
-                    <td><input type=radio name="{{ index  }}" value=Nuraini data-textid="share-txt{{index}}"></td>
-                    <td><input type=radio name="{{ index  }}" value=Half-Split data-textid="share-txt{{index}}"></td>
-                    <td><input type=radio name="{{ index  }}" value=Payment data-textid="share-txt{{index}}"></td>
-                    <td><input type=radio id="share-btn{{index}}" name="{{ index  }}" value=Share data-textid="share-txt{{index}}">
-                      <input type="number" id="share-txt{{index}}" style="display:none" name="txt{{ index  }}" />​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​</td>
+                    <td><input type=radio name="{{ index  }}" value=Saleh id="saleh-{{index}}">
+                      <label for="saleh-{{index}}"></label>
+                      <div class="check"></div>
+                    </td>
+                    <td><input type=radio name="{{ index  }}" value=Nuraini id="nuraini-{{index}}">
+                      <label for="nuraini-{{index}}"></label>
+                      <div class="check"></div>
+                    </td>
+                    <td><input type=radio name="{{ index  }}" value=Half-Split id="half-{{index}}">
+                      <label for="half-{{index}}"></label>
+                      <div class="check"></div>
+                    </td>
+                    <td><input type=radio name="{{ index  }}" value=Payment id="payment-{{index}}">
+                      <label for="payment-{{index}}"></label>
+                      <div class="check"></div>
+                    </td>
+                    <td><input type=radio id="share-btn{{index}}" name="{{ index  }}" value=Share>
+                      <label for="share-btn{{index}}"></label>
+                      <div class="check"></div>
+                      <input class="share-number" type="number" id="share-txt{{index}}" name="txt{{ index  }}" />​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​</td>
                 </tr>
             {% endfor %}
         </table>
-        <input type="submit" value="Submit">
+        <div class="button">
+          <input id="submit-btn" type="submit" value="Submit">
+        </div>
+        
     </form>
       </div>
     </div>
   </div>
 </body>
+
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
   <script>
     $(function(){
       $("input[type='radio']").change(function(){
-        var textId = $(this).attr('data-textid');
+        var index = $(this).attr('name');
         if($(this).val()=="Share"){
-          $("#"+textId).show();
+          $("#share-txt"+index).show();
+          $(this).hide();
         }
         else{
          $("#"+textId).hide(); 
+         
+          $("#share-btn"+index).show();
         }
       });
     });

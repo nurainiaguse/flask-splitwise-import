@@ -13,6 +13,7 @@ h1{
   font-family: 'Molengo', Helvetica, Arial, sans-serif;
   font-size: 80px;
   color:black;
+  display:inline;
 }
 
 h2{
@@ -36,11 +37,32 @@ h2{
 #main-header .container{
 	margin-top:50px;
 }
+/*#main-header{
+	display:inline;
+}*/
 
 #upload-section .container{
 	/*border:solid black 10px;*/
 	position:relative;
 	height:40%;
+}
+
+#navbar{
+	float:right;
+	display:inline;
+}
+#navbar ul{
+	list-style: none;
+	padding-top:20%;
+}
+#navbar li{
+	display:inline;
+}
+#navbar a{
+	color:white;
+	text-decoration: none;
+	font-size:18px;
+	padding-right:15px;
 }
 
 .form-container{
