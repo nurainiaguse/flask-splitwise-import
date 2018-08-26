@@ -38,8 +38,11 @@ def is_number(s):
 def home():
     # if method is GET and user is logged in
     if 'access_token' in session:
+
         return render_template("upload.html")
         # if method is GET and user is not logged in
+
+
     return render_template("home.html")
 
     # if method is POST
@@ -90,23 +93,43 @@ def submission():
     # print(saleh_value) 
 
     # set up each user
-    saleh = ExpenseUser()
-    saleh.setId(2242086)
-
-    paypal = ExpenseUser()
-    paypal.setId(13080887)
-
-    nuraini = ExpenseUser()
-    nuraini.setId(2705458)
+    
 
     sObj = Splitwise(Config.consumer_key,Config.consumer_secret)
     sObj.setAccessToken(session['access_token'])
-    users = []
-    users.append(saleh)
-    users.append(paypal)
-    users.append(nuraini)
+
+    saleh = ExpenseUser()
+    saleh.setId(2242086)
+    paypal = ExpenseUser()
+    paypal.setId(13080887)
+    nuraini = ExpenseUser()
+    nuraini.setId(2705458)
+ 
+    # users = []
+    # users.append(saleh)
+    # users.append(paypal)
+    # users.append(nuraini)
+    # saleh.setPaidShare('0.00')
+    # nuraini.setPaidShare('0.00')
+    # paypal.setPaidShare('2.00')
+            
+    # saleh.setOwedShare('1.00')
+    # nuraini.setOwedShare('1.00')
+    # paypal.setOwedShare('0.00')
+    
+    # expense = Expense()
+    # expense.setUsers(users)
+    # expense.setGroupId(6456733)
+    # expense.setCost("2.00")
+    # expense.setDescription("testing")
+    # expense.setDate("25/08/2018")
+
+    # expense = sObj.createExpense(expense)
+
+    # return redirect(url_for("success"))
 
     for key in request.form:
+        print(key)
         if not is_number(key):
             continue
         value = request.form[key]
@@ -114,6 +137,10 @@ def submission():
             continue # we dont handle payments yet
         print(key, value)
         amount = df.iloc[int(float(key))]['Amount']
+        users = []
+        users.append(saleh)
+        users.append(paypal)
+        users.append(nuraini)
         saleh.setPaidShare('0.00')
         nuraini.setPaidShare('0.00')
         paypal.setPaidShare('0.00')
@@ -125,10 +152,17 @@ def submission():
         expense = Expense()
         expense.setUsers(users)
         expense.setGroupId(6456733)
-        expense.setCost(amount)
+        expense.setCost(str(abs(float(amount))))
         expense.setDescription(df.iloc[int(float(key))]['Description'])
+        # expense.setDescription("testing")
         # print (datetime.datetime.strptime(line['Date'], '%m/%d/%y').strftime('%d/%m/%Y'))
-        expense.setDate(datetime.datetime.strptime(df.iloc[int(float(key))]['Transaction Date'], '%m/%d/%y').strftime('%d/%m/%Y'))
+        print(df.iloc[int(float(key))]['Transaction Date'])
+        # expense.setDate("25/08/2018")
+        expense.setDate(datetime.datetime.strptime(df.iloc[int(float(key))]['Transaction Date'], '%m/%d/%Y').strftime('%d/%m/%Y'))
+        # paypal.setOwedShare("4.00")
+        # saleh.setPaidShare("4.00")
+
+
 
         if float(amount) > 0:
             #print ("Refund", line['Payer'], line['Date'], line['Description'], line['Amount'])
@@ -138,27 +172,37 @@ def submission():
             elif value == 'Nuraini':
                 paypal.setOwedShare(str(abs(float(amount))))
                 nuraini.setPaidShare(str(abs(float(amount))))   
-            # expense = sObj.createExpense(expense)
+            expense = sObj.createExpense(expense)
             continue
-            # print (expense.getId())
+            print (expense.getId())
 
                 #print ("Charge", line['Payer'], line['Date'], line['Description'], line['Amount'])
         if value == 'Saleh':
             saleh.setOwedShare(str(abs(float(amount))))
             paypal.setPaidShare(str(abs(float(amount))))
+            expense = sObj.createExpense(expense)
         elif value == 'Nuraini':
             nuraini.setOwedShare(str(abs(float(amount))))
             paypal.setPaidShare(str(abs(float(amount))))
+            expense = sObj.createExpense(expense)
         elif value == 'Half-Split':
-            nuraini.setOwedShare(str(abs(float(amount)/2)))
-            saleh.setOwedShare(str(abs(float(amount)/2)))
+            print(str(abs(float(amount))/2))
+            half = round(abs(float(amount))/2,2)
+            other_half = abs(float(amount))-half
+            print(half,other_half)
+
+            nuraini.setOwedShare(half)
+            saleh.setOwedShare(other_half)
             paypal.setPaidShare(str(abs(float(amount))))
+           
+            expense = sObj.createExpense(expense)
         elif value == 'Share':
             continue
-            # expense = sObj.createExpense(expense)
-            # print (expense.getId())
-
-    return redirect(url_for("friends"))
+        
+        print (expense.getId())
+    
+    return redirect(url_for("success"))
+    
 
 
 @app.route("/login")

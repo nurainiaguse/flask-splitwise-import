@@ -1,7 +1,21 @@
 {% extends "base.html" %}
 {% block title %}Friends{% endblock %}
 {% block content %}
-  <div class="jumbotron">
+<head>
+  <link rel="stylesheet" href="{{ url_for('static',filename='css/styles.css') }}">
+  <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Goudy+Bookletter+1911" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Karla" rel="stylesheet">
+</head>
+
+<section id="sidebar">
+    <a href="{{ url_for('home') }}">divvy.csv</a>
+    <a href="#about">About</a>
+  <a href="#services">Services</a>
+  <a href="#clients">Clients</a>
+  <a href="#contact">Contact</a>
+  </section>
+  <div class="jumbotron container">
     <h2>Friends</h2>
   </div>
   <div class="friendCont">
