@@ -20,8 +20,6 @@ ALLOWED_EXTENSIONS = set(['csv'])
 csv_input = 0
 file = 0
 df = 0
-saleh_value = []
-nuraini_value = []
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -40,12 +38,8 @@ def home():
     if 'access_token' in session:
 
         return render_template("upload.html")
-        # if method is GET and user is not logged in
-
 
     return render_template("home.html")
-
-    # if method is POST
 
 @app.route("/transform", methods=["POST"])
 def transform():
@@ -56,44 +50,14 @@ def transform():
         return render_template("transform.html",transactions=df)
     if file and allowed_file(file.filename):
         df = pd.read_csv(file.stream)
-        print(list(df))
-        for index, row in df.iterrows():
-            print(row['Transaction Date'], row['Amount'])
         return render_template("transform.html",transactions=df)
     return redirect(url_for("/"))
-    # return "done"
-    # if not file:
-    #     return "No file"
-    # if file and allowed_file(file.filename):
-    #     stream = io.StringIO(file.stream.read().decode("UTF8"), newline=None)
-    #     global csv_input 
-    #     csv_input = csv.reader(stream)
-
-    #     next(csv_input)
-    #     #print("file contents: ", file_contents)
-    #     #print(type(file_contents))
-    #     # print(csv_input)
-    #     # for row in csv_input:
-    #     #     print(row[0])
-    #     return render_template("transform.html",transactions=csv_input)
-    # return redirect(url_for("transform"))
-    # file = request.files['data_file']
     
 @app.route("/submission", methods=["POST"])
 def submission():
     global df
-    global nuraini_value
-    global saleh_value
     # TODO: add checks beforehand whether the user has clicked on all checkboxes
-    print(request.form)
-    # nuraini_value = request.form.getlist('Nuraini') 
-    # print(nuraini_value)
-    
-    # saleh_value = request.form.getlist('Saleh')
-    # print(saleh_value) 
-
-    # set up each user
-    
+    # print(request.form)
 
     sObj = Splitwise(Config.consumer_key,Config.consumer_secret)
     sObj.setAccessToken(session['access_token'])
@@ -104,32 +68,8 @@ def submission():
     paypal.setId(13080887)
     nuraini = ExpenseUser()
     nuraini.setId(2705458)
- 
-    # users = []
-    # users.append(saleh)
-    # users.append(paypal)
-    # users.append(nuraini)
-    # saleh.setPaidShare('0.00')
-    # nuraini.setPaidShare('0.00')
-    # paypal.setPaidShare('2.00')
-            
-    # saleh.setOwedShare('1.00')
-    # nuraini.setOwedShare('1.00')
-    # paypal.setOwedShare('0.00')
-    
-    # expense = Expense()
-    # expense.setUsers(users)
-    # expense.setGroupId(6456733)
-    # expense.setCost("2.00")
-    # expense.setDescription("testing")
-    # expense.setDate("25/08/2018")
-
-    # expense = sObj.createExpense(expense)
-
-    # return redirect(url_for("success"))
 
     for key in request.form:
-        print(key)
         if not is_number(key):
             continue
         value = request.form[key]
@@ -154,18 +94,14 @@ def submission():
         expense.setGroupId(6456733)
         expense.setCost(str(abs(float(amount))))
         expense.setDescription(df.iloc[int(float(key))]['Description'])
-        # expense.setDescription("testing")
-        # print (datetime.datetime.strptime(line['Date'], '%m/%d/%y').strftime('%d/%m/%Y'))
-        print(df.iloc[int(float(key))]['Transaction Date'])
-        # expense.setDate("25/08/2018")
-        expense.setDate(datetime.datetime.strptime(df.iloc[int(float(key))]['Transaction Date'], '%m/%d/%Y').strftime('%d/%m/%Y'))
-        # paypal.setOwedShare("4.00")
-        # saleh.setPaidShare("4.00")
 
+        try:
+            expense.setDate(datetime.datetime.strptime(df.iloc[int(float(key))]['transaction Date'], '%m/%d/%Y').strftime('%d/%m/%Y'))
+        except:
+            expense.setDate(datetime.datetime.strptime(df.iloc[int(float(key))]['Transaction Date'], '%m/%d/%y').strftime('%d/%m/%Y'))
 
-
+        # case where a transaction is refunded
         if float(amount) > 0:
-            #print ("Refund", line['Payer'], line['Date'], line['Description'], line['Amount'])
             if value == 'Saleh':
                 paypal.setOwedShare(str(abs(float(amount))))
                 saleh.setPaidShare(str(abs(float(amount))))
@@ -174,9 +110,8 @@ def submission():
                 nuraini.setPaidShare(str(abs(float(amount))))   
             expense = sObj.createExpense(expense)
             continue
-            print (expense.getId())
 
-                #print ("Charge", line['Payer'], line['Date'], line['Description'], line['Amount'])
+        # case for expenses
         if value == 'Saleh':
             saleh.setOwedShare(str(abs(float(amount))))
             paypal.setPaidShare(str(abs(float(amount))))
@@ -186,20 +121,15 @@ def submission():
             paypal.setPaidShare(str(abs(float(amount))))
             expense = sObj.createExpense(expense)
         elif value == 'Half-Split':
-            print(str(abs(float(amount))/2))
             half = round(abs(float(amount))/2,2)
             other_half = abs(float(amount))-half
-            print(half,other_half)
-
             nuraini.setOwedShare(half)
             saleh.setOwedShare(other_half)
             paypal.setPaidShare(str(abs(float(amount))))
-           
             expense = sObj.createExpense(expense)
         elif value == 'Share':
+            
             continue
-        
-        print (expense.getId())
     
     return redirect(url_for("success"))
     
