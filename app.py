@@ -65,7 +65,7 @@ def submission():
     saleh = ExpenseUser()
     saleh.setId(2242086)
     paypal = ExpenseUser()
-    paypal.setId(13080887)
+    paypal.setId(18572820)
     nuraini = ExpenseUser()
     nuraini.setId(2705458)
 
@@ -96,9 +96,9 @@ def submission():
         expense.setDescription(df.iloc[int(float(key))]['Description'])
 
         try:
-            expense.setDate(datetime.datetime.strptime(df.iloc[int(float(key))]['transaction Date'], '%m/%d/%Y').strftime('%d/%m/%Y'))
+            expense.setDate(datetime.datetime.strptime(df.iloc[int(float(key))]['Trans Date'], '%m/%d/%Y').strftime('%d/%m/%Y'))
         except:
-            expense.setDate(datetime.datetime.strptime(df.iloc[int(float(key))]['Transaction Date'], '%m/%d/%y').strftime('%d/%m/%Y'))
+            expense.setDate(datetime.datetime.strptime(df.iloc[int(float(key))]['Trans Date'], '%m/%d/%y').strftime('%d/%m/%Y'))
 
         # case where a transaction is refunded
         if float(amount) > 0:
@@ -171,108 +171,7 @@ def friends():
     sObj = Splitwise(Config.consumer_key,Config.consumer_secret)
     sObj.setAccessToken(session['access_token'])
 
-    # print sObj.getCurrentUser().getId()
-
-    # groups = sObj.getGroups()
-    # for g in groups:
-    #     print g.getName(), g.getId()
-
     friends = sObj.getFriends()
-
-    ################## CODE TO IMPORT TRANSACTIONS #######################
-    # with open(sys.argv[1], 'r') as paypal_csv:
-    #     paypal_output = csv.DictReader(paypal_csv)
-
-    #     for line in paypal_output:
-    #         saleh = ExpenseUser()
-    #         saleh.setId(2242086)
-
-    #         paypal = ExpenseUser()
-    #         paypal.setId(13080887)
-
-    #         nuraini = ExpenseUser()
-    #         nuraini.setId(2705458)
-
-    #         users = []
-    #         users.append(saleh)
-    #         users.append(paypal)
-    #         users.append(nuraini)
-
-    #         saleh.setPaidShare('0.00')
-    #         nuraini.setPaidShare('0.00')
-    #         paypal.setPaidShare('0.00')
-            
-    #         saleh.setOwedShare('0.00')
-    #         nuraini.setOwedShare('0.00')
-    #         paypal.setOwedShare('0.00')
-
-    #         expense = Expense()
-    #         expense.setUsers(users)
-    #         expense.setGroupId(6456733)
-    #         expense.setCost(str(abs(float(line['Amount']))))
-    #         expense.setDescription(line['Description'])
-    #         # print (datetime.datetime.strptime(line['Date'], '%m/%d/%y').strftime('%d/%m/%Y'))
-    #         expense.setDate(datetime.datetime.strptime(line['Date'], '%m/%d/%y').strftime('%d/%m/%Y'))
-
-    #         if float(line['Amount']) > 0 and line['Payer'] != 'Payment':
-    #             print ("Refund", line['Payer'], line['Date'], line['Description'], line['Amount'])
-    #             if line['Payer'] == 'Saleh':
-    #                 paypal.setOwedShare(str(abs(float(line['Amount']))))
-    #                 saleh.setPaidShare(str(abs(float(line['Amount']))))
-    #             elif line['Payer'] == 'Nuraini':
-    #                 paypal.setOwedShare(str(abs(float(line['Amount']))))
-    #                 nuraini.setPaidShare(str(abs(float(line['Amount']))))
-    #             elif line['Payer'] == 'Split':
-    #                 paypal.setOwedShare(str(abs(float(line['Amount']))))
-    #                 nuraini.setPaidShare(str(abs(float(line['Amount'])/2)))
-    #                 saleh.setPaidShare(str(abs(float(line['Amount'])/2)))
-
-                
-    #             expense = sObj.createExpense(expense)
-    #             print (expense.getId())
-
-    #         elif line['Payer'] != 'Payment':
-    #             print ("Charge", line['Payer'], line['Date'], line['Description'], line['Amount'])
-    #             if line['Payer'] == 'Saleh':
-    #                 saleh.setOwedShare(str(abs(float(line['Amount']))))
-    #                 paypal.setPaidShare(str(abs(float(line['Amount']))))
-    #             elif line['Payer'] == 'Nuraini':
-    #                 nuraini.setOwedShare(str(abs(float(line['Amount']))))
-    #                 paypal.setPaidShare(str(abs(float(line['Amount']))))
-    #             elif line['Payer'] == 'Split':
-    #                 if line['Saleh\'s Share'] or line['Nuraini\'s Share']:
-    #                     nuraini.setOwedShare(str(abs(float(line['Nuraini\'s Share']))))
-    #                     saleh.setOwedShare(str(abs(float(line['Saleh\'s Share']))))
-    #                     paypal.setPaidShare(str(abs(float(line['Amount']))))
-    #                 else:
-    #                     nuraini.setOwedShare(str(abs(float(line['Amount'])/2)))
-    #                     saleh.setOwedShare(str(abs(float(line['Amount'])/2)))
-    #                     paypal.setPaidShare(str(abs(float(line['Amount']))))
-
-    #             expense = sObj.createExpense(expense)
-    #             print (expense.getId())
-
-
-    ################### CODE TO FIND MONTHLY EXPENSE ##########################
-    # compare_date_1 = datetime.datetime(2018, 2, 1).replace(tzinfo=tz.gettz('America/Chicago'))
-    # compare_date_2 = datetime.datetime(2018, 3, 1).replace(tzinfo=tz.gettz('America/Chicago'))
-    
-    # expenses = sObj.getExpenses(limit=0, dated_after=compare_date_1.strftime('%d/%m/%Y'), dated_before=compare_date_2.strftime('%d/%m/%Y'))
-    # existing_expenses = [expense for expense in expenses if (expense.getDescription() != '..' and expense.getDescription() != 'Payment' and expense.getDeletedAt() == None and not 'multi' in expense.getDescription()) ]
-    # saleh_expenses = [expense for expense in existing_expenses for users in expense.getUsers() if users.getId() == 2242086]
-    # count = 0
-    # totalcost = 0
-    # for expense in saleh_expenses:
-    #     new_date = iso8601.parse_date(expense.getDate()).astimezone(tz.gettz('America/Chicago'))
-    #     if (new_date >= compare_date_1 and new_date < compare_date_2):
-    #         count += 1
-    #         cost = 0
-    #         for users in expense.getUsers():
-    #             if users.getId() == 2242086:
-    #                 cost = users.getOwedShare()
-    #         print (str(count).ljust(2), expense.getDescription()[:55].ljust(55), str(cost).ljust(6), new_date.strftime('%m/%d/%Y'))
-    #         totalcost += float(cost)
-    # print ("Total cost was: ", round(totalcost,2))
 
 
     return render_template("friends.html",friends=friends)

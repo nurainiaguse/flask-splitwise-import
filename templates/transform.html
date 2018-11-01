@@ -15,7 +15,7 @@
   </header>
   
   <section id="sidebar">
-    <a href="{{ url_for('home') }}">divvy.csv</a>
+    <a href="{{ url_for('home') }}">splice!</a>
     <a href="#about">About</a>
   <a href="#services">Services</a>
   <a href="#clients">Clients</a>
@@ -40,16 +40,16 @@
                 <th>Date</th>
                 <th>Cost</th>
                 <th>Description</th>
-                <th>Saleh</th>
-                <th>Nuraini</th>
+                <th>User 1</th>
+                <th>User 2</th>
                 <th>Half-Split</th>
                 <th>Payment</th>
-                <th>Share</th>
+                <th>Percentage-Split</th>
             </tr>
              {% for index, row in transactions.iterrows() %}
                 <tr>
                     <td>{{ row['Transaction Date'] }}</td>
-                    <td>{{ row['Amount'] }}</td>
+                    <td>${{ -row['Amount'] }}</td>
                     <td>{{ row['Description']}}</td>
                     <td><input type=radio name="{{ index  }}" value=Saleh id="saleh-{{index}}">
                       <label for="saleh-{{index}}"></label>
