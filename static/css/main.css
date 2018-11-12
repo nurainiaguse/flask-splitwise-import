@@ -41,11 +41,7 @@ h2{
 	display:inline;
 }*/
 
-#upload-section .container{
-	/*border:solid black 10px;*/
-	position:relative;
-	height:40%;
-}
+
 
 #navbar{
 	float:right;
@@ -63,6 +59,22 @@ h2{
 	text-decoration: none;
 	font-size:18px;
 	padding-right:15px;
+}
+
+#upload-section{
+	opacity:1;
+	transition:1s opacity;
+}
+
+#upload-section.fade_out {
+	opacity: 0;
+	transition: none;
+}
+
+#upload-section .container{
+	/*border:solid black 10px;*/
+	position:relative;
+	height:40%;
 }
 
 .form-container{

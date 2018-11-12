@@ -32,26 +32,33 @@ def is_number(s):
     except ValueError:
         return False
 
-@app.route("/")
+@app.route("/", methods=["POST", "GET"])
 def home():
     # if method is GET and user is logged in
-    if 'access_token' in session:
+    if request.method == 'GET':
+        if 'access_token' in session:
+            return render_template("upload.html")
 
-        return render_template("upload.html")
-
-    return render_template("home.html")
+        return render_template("home.html")
+    else:
+        global file
+        global df
+        file = request.files['data_file']
+        print("in questions")
+        if not file:
+            return render_template("questions.html",first_row=df.columns.get_values().tolist())
+        if file and allowed_file(file.filename):
+            df = pd.read_csv(file.stream)
+            print(df.columns.get_values().tolist())
+            return render_template("questions.html",first_row=df.columns.get_values().tolist())
+    return redirect(url_for("/"))
 
 @app.route("/transform", methods=["POST"])
 def transform():
-    global file
+    # have to change the df based on user input from questions
     global df
-    file = request.files['data_file']
-    if not file:
-        return render_template("transform.html",transactions=df)
-    if file and allowed_file(file.filename):
-        df = pd.read_csv(file.stream)
-        return render_template("transform.html",transactions=df)
-    return redirect(url_for("/"))
+    print("in transform")
+    render_template("home.html")
     
 @app.route("/submission", methods=["POST"])
 def submission():
