@@ -33,9 +33,3 @@ python app.py
 ```
 
 Goto http://localhost:5000/ on your browser.
-
-## Contact
-Contact naman (dot) aggarwal (at) yahoo (dot) com for any information.
-
-
-# splitwise_import
